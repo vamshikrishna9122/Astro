@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="./index.html">TechSpira Astrology</a></div>
+        <nav>
+            <ul>
+                <li><a href="./home.html">Home</a></li>
+                <li><a href="#horoscope">Horoscope</a></li>
+                <li><a href="./login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <form id="signup-form">
+            <fieldset>
+                <legend>SIGN UP</legend>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required> <br><br>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email" required> <br><br>
+
+                <label for="phonenumber">Phone Number</label>
+                <input type="text" id="phonenumber" name="phonenumber" placeholder="Enter phone number" required> <br><br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required> <br><br>
+
+                <label for="gender">Gender</label>
+                <input type="text" id="gender" name="gender" placeholder="Enter gender" required> <br><br>
+
+                <button type="submit">Sign Up</button>
+                <button type="reset">Cancel</button> <br><br>
+                <p>Already have an account? <a href="./login.html">Login</a></p>
+                <div class="message" id="signup-message"></div>
+            </fieldset>
+        </form>
+    </div>
+
+    <script>
+        // Add an event listener to the signup form
+        document.getElementById("signup-form").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Prevent default form submission behavior
+
+            // Get the form data
+            const formData = new FormData(e.target);
+            const userData = {
+                username: formData.get("username"),
+                email: formData.get("email"),
+                phonenumber: formData.get("phonenumber"),
+                password: formData.get("password"),
+                gender: formData.get("gender"),
+            };
+
+            try {
+                // Send a POST request to your backend API
+                const response = await fetch("http://localhost:8080/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const result = await response.json();
+                const messageBox = document.getElementById("signup-message");
+
+                if (response.ok) {
+                    messageBox.textContent = "Signup Successful!";
+                    messageBox.style.color = "green";
+                    // Redirect to login page or any other page
+                    window.location.href = "./login.html";
+                } else {
+                    messageBox.textContent = `Signup Failed: ${result.message}`;
+                    messageBox.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("signup-message").textContent = "An error occurred. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
